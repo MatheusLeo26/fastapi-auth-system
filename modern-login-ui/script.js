@@ -57,57 +57,109 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle Login API Call
+    // Handle Form submission (Login & Register)
     const loginForm = document.getElementById('login-form');
     const errorMessage = document.getElementById('error-message');
+    const submitBtn = document.getElementById('submit-btn');
+    const formTitle = document.getElementById('form-title');
+    const formSubtitle = document.getElementById('form-subtitle');
+    const emailGroup = document.getElementById('email-group');
+    const registerEmailInput = document.getElementById('register-email');
+    const toggleModeLink = document.getElementById('toggle-mode-link');
+    const toggleText = document.getElementById('toggle-text');
+
+    let isLoginMode = true;
+
+    // Toggle Login/Register Mode
+    toggleModeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        isLoginMode = !isLoginMode;
+        errorMessage.textContent = ''; // clear error
+        
+        if (isLoginMode) {
+            formTitle.textContent = 'Welcome back';
+            formSubtitle.textContent = 'Please enter your details.';
+            submitBtn.textContent = 'Log in';
+            emailGroup.style.display = 'none';
+            registerEmailInput.removeAttribute('required');
+            toggleText.innerHTML = `Don't have an account? <a href="#" id="toggle-mode-link">Sign up</a>`;
+        } else {
+            formTitle.textContent = 'Create an account';
+            formSubtitle.textContent = 'Enter your details to register.';
+            submitBtn.textContent = 'Sign up';
+            emailGroup.style.display = 'block';
+            registerEmailInput.setAttribute('required', 'true');
+            toggleText.innerHTML = `Already have an account? <a href="#" id="toggle-mode-link">Log in</a>`;
+        }
+
+        // Re-attach listener to the newly rendered link
+        document.getElementById('toggle-mode-link').addEventListener('click', arguments.callee);
+    });
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorMessage.textContent = ''; // Clear previous errors
         
-        const username = emailInput.value; // The input is now labeled Username
+        const username = emailInput.value;
         const password = passwordInput.value;
-        const API_URL = 'http://localhost:8000'; // Make sure the FastAPI app is running!
+        const API_URL = 'http://localhost:8000'; 
 
         try {
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
+            if (isLoginMode) {
+                // LOGIN
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
 
-            // Fetch to actual backend
-            const res = await fetch(`${API_URL}/users/login`, {
-                method: 'POST',
-                body: formData
-            });
-            
-            const data = await res.json();
-            if (res.ok) {
-                // Success! Save token and show success message
-                localStorage.setItem('token', data.access_token);
-                errorMessage.style.color = '#10b981'; // Green for success
-                errorMessage.textContent = 'Login successful! Redirecting...';
+                const res = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    body: formData
+                });
                 
-                // In a real scenario, you'd redirect to the dashboard here.
-                // Since this UI is separate, we'll just show the message.
-                setTimeout(() => {
-                    // window.location.href = '/'; 
-                }, 1500);
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('token', data.access_token);
+                    errorMessage.style.color = '#10b981';
+                    errorMessage.textContent = 'Login successful! Redirecting...';
+                    setTimeout(() => {
+                        window.location.href = '/'; 
+                    }, 1000);
+                } else {
+                    errorMessage.style.color = '#ef4444'; 
+                    errorMessage.textContent = data.detail || 'Incorrect username or password';
+                }
             } else {
-                errorMessage.style.color = '#ef4444'; // Red for error
-                errorMessage.textContent = data.detail || 'Incorrect username or password';
+                // REGISTER
+                const email = registerEmailInput.value;
+                const payload = {
+                    username: username,
+                    email: email,
+                    password: password
+                };
+
+                const res = await fetch(`${API_URL}/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    errorMessage.style.color = '#10b981';
+                    errorMessage.textContent = 'Account created successfully! You can now log in.';
+                    // Switch back to login mode automatically
+                    setTimeout(() => {
+                        document.getElementById('toggle-mode-link').click();
+                        passwordInput.value = ''; // clear password
+                    }, 1500);
+                } else {
+                    errorMessage.style.color = '#ef4444'; 
+                    errorMessage.textContent = data.detail || 'Failed to create account';
+                }
             }
         } catch (err) {
             errorMessage.style.color = '#ef4444';
             errorMessage.textContent = 'Failed to connect to the server. Is it running?';
         }
     });
-
-    // Add a simple alert for Sign up
-    const signUpLink = document.querySelector('.form-footer a');
-    if (signUpLink) {
-        signUpLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert("This is just the UI preview! In the full integration, this would switch to the Register form.");
-        });
-    }
 });

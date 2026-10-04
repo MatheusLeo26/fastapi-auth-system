@@ -62,14 +62,19 @@
             <!-- Right Side - Form -->
             <div class="form-side">
                 <div class="login-header">
-                    <h2>Welcome back</h2>
-                    <p>Please enter your details.</p>
+                    <h2 id="form-title">Welcome back</h2>
+                    <p id="form-subtitle">Please enter your details.</p>
                 </div>
                 
                 <form id="login-form" class="login-form">
                     <div class="form-group">
                         <label for="email">Username</label>
                         <input type="text" id="email" placeholder="Enter your username" required>
+                    </div>
+
+                    <div class="form-group email-group" id="email-group" style="display: none;">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" placeholder="Enter your email">
                     </div>
                     
                     <div class="form-group">
@@ -99,7 +104,7 @@
                     
                     <div id="error-message" class="error-message"></div>
                     
-                    <button type="submit" class="btn-primary">Log in</button>
+                    <button type="submit" class="btn-primary" id="submit-btn">Log in</button>
                     <button type="button" class="btn-secondary">
                         <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -112,7 +117,7 @@
                 </form>
                 
                 <p class="form-footer">
-                    Don't have an account? <a href="#">Sign up</a>
+                    <span id="toggle-text">Don't have an account? <a href="#" id="toggle-mode-link">Sign up</a></span>
                 </p>
             </div>
     </div>
