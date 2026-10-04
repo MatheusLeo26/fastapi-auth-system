@@ -70,30 +70,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isLoginMode = true;
 
-    // Toggle Login/Register Mode
-    toggleModeLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        isLoginMode = !isLoginMode;
-        errorMessage.textContent = ''; // clear error
-        
-        if (isLoginMode) {
-            formTitle.textContent = 'Welcome back';
-            formSubtitle.textContent = 'Please enter your details.';
-            submitBtn.textContent = 'Log in';
-            emailGroup.style.display = 'none';
-            registerEmailInput.removeAttribute('required');
-            toggleText.innerHTML = `Don't have an account? <a href="#" id="toggle-mode-link">Sign up</a>`;
-        } else {
-            formTitle.textContent = 'Create an account';
-            formSubtitle.textContent = 'Enter your details to register.';
-            submitBtn.textContent = 'Sign up';
-            emailGroup.style.display = 'block';
-            registerEmailInput.setAttribute('required', 'true');
-            toggleText.innerHTML = `Already have an account? <a href="#" id="toggle-mode-link">Log in</a>`;
+    // Toggle Login/Register Mode using Event Delegation
+    toggleText.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'toggle-mode-link') {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            errorMessage.textContent = ''; // clear error
+            
+            if (isLoginMode) {
+                formTitle.textContent = 'Welcome back';
+                formSubtitle.textContent = 'Please enter your details.';
+                submitBtn.textContent = 'Log in';
+                emailGroup.style.display = 'none';
+                registerEmailInput.removeAttribute('required');
+                toggleText.innerHTML = `Don't have an account? <a href="#" id="toggle-mode-link">Sign up</a>`;
+            } else {
+                formTitle.textContent = 'Create an account';
+                formSubtitle.textContent = 'Enter your details to register.';
+                submitBtn.textContent = 'Sign up';
+                emailGroup.style.display = 'block';
+                registerEmailInput.setAttribute('required', 'true');
+                toggleText.innerHTML = `Already have an account? <a href="#" id="toggle-mode-link">Log in</a>`;
+            }
         }
-
-        // Re-attach listener to the newly rendered link
-        document.getElementById('toggle-mode-link').addEventListener('click', arguments.callee);
     });
 
     loginForm.addEventListener('submit', async (e) => {
