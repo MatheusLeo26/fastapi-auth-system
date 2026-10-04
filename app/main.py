@@ -7,9 +7,9 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from pathlib import Path
 
-from . import models
-from .database import engine
-from .routers import users, items
+from app import models
+from app.database import engine
+from app.routers import users, items
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -41,7 +41,10 @@ app.include_router(items.router)
 
 # Mount Frontend
 frontend_dir = Path(__file__).parent.parent / "frontend"
+modern_ui_dir = Path(__file__).parent.parent / "modern-login-ui"
+
 app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+app.mount("/modern", StaticFiles(directory=modern_ui_dir, html=True), name="modern")
 
 @app.get("/", response_class=HTMLResponse)
 @limiter.limit("5/minute")
