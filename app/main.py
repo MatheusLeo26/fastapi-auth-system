@@ -52,7 +52,7 @@ async def root(request: Request):
     """
     Serve the main frontend page.
     """
-    with open(frontend_dir / "index.html", "r", encoding="utf-8") as f:
+    with open(modern_ui_dir / "index.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content, status_code=200)
 
