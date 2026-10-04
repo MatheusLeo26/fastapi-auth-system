@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth System & CRUD</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="toast" class="toast hidden"></div>
+
+    <div class="container">
+        <!-- Auth Section -->
+        <div id="auth-section" class="glass-card fade-in">
+            <h1 class="title">Welcome</h1>
+            <p class="subtitle">Please login or create an account</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required placeholder="Enter your username">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn primary-btn">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form hidden" onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" required placeholder="Choose a username">
+                </div>
+                <div class="input-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" required placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn primary-btn">Sign Up</button>
+            </form>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="glass-card hidden">
+            <div class="dashboard-header">
+                <h2>Dashboard</h2>
+                <div class="user-info">
+                    <span id="user-display"></span>
+                    <button onclick="handleLogout()" class="btn outline-btn">Logout</button>
+                </div>
+            </div>
+
+            <div class="crud-section">
+                <h3>My Items</h3>
+                <form id="add-item-form" onsubmit="handleAddItem(event)" class="add-item-form">
+                    <input type="text" id="item-title" required placeholder="Item Title" class="inline-input">
+                    <input type="text" id="item-desc" placeholder="Item Description" class="inline-input">
+                    <button type="submit" class="btn primary-btn sm-btn">Add</button>
+                </form>
+
+                <div id="items-list" class="items-grid">
+                    <!-- Items will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
